@@ -242,6 +242,9 @@
             /* 初始展示淡灰占位，具体封面由内联样式或 JS 设置 */
             background: #f2f2f2 center/cover no-repeat;
             background-size: cover;
+            /* 使用 content-visibility 优化渲染性能 */
+            content-visibility: auto;
+            contain-intrinsic-size: auto 551px;
         }
         
         .video-container video {
@@ -251,6 +254,8 @@
             opacity: 1;                       /* 初始可见显示 poster 占位图 */
             transition: opacity .8s ease;
             background: #f2f2f2;             /* 防止黑块出现 */
+            /* 异步解码优化，与 decoding="async" 配合 */
+            will-change: transform;
         }
         
         .video-container video.loaded {
@@ -935,7 +940,7 @@
                                 <!-- 【此处替换为你的竖屏视频1】 -->
                                 <!-- 封面图路径：poster 属性 -->
                                 <!-- 视频路径：source 的 data-src 值 （懒加载） -->
-                                <video muted autoplay loop playsinline preload="none" poster="Work1.jpg" loading="lazy">
+                                <video muted autoplay loop playsinline decoding="async" preload="metadata" poster="Work1.jpg" loading="lazy">
                                     <source data-src="Work11.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
@@ -962,7 +967,7 @@
                                 <!-- 【此处替换为你的竖屏视频2】 -->
                                 <!-- 封面图路径：poster 属性 -->
                                 <!-- 视频路径：source 的 data-src 值 （懒加载） -->
-                                <video muted autoplay loop playsinline preload="none" poster="Work2.jpg" loading="lazy">
+                                <video muted autoplay loop playsinline decoding="async" preload="metadata" poster="Work2.jpg" loading="lazy">
                                     <source data-src="Work22.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
@@ -989,7 +994,7 @@
                                 <!-- 【此处替换为你的竖屏视频3】 -->
                                 <!-- 封面图路径：poster 属性 -->
                                 <!-- 视频路径：source 的 data-src 值 （懒加载） -->
-                                <video muted autoplay loop playsinline preload="none" poster="Work3.jpg" loading="lazy">
+                                <video muted autoplay loop playsinline decoding="async" preload="metadata" poster="Work3.jpg" loading="lazy">
                                     <source data-src="Work33.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
@@ -1016,7 +1021,7 @@
                                 <!-- 【此处替换为你的竖屏视频4】 -->
                                 <!-- 封面图路径：poster 属性 -->
                                 <!-- 视频路径：source 的 data-src 值 （懒加载） -->
-                                <video muted autoplay loop playsinline preload="none" poster="work4.jpg" loading="lazy">
+                                <video muted autoplay loop playsinline decoding="async" preload="metadata" poster="work4.jpg" loading="lazy">
                                     <source data-src="Work44.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
@@ -1056,7 +1061,7 @@
                                 <!-- 【此处替换为你的横屏长视频1】 -->
                                 <!-- 封面图路径：poster 属性 -->
                                 <!-- 视频路径：source 的 data-src 值 （懒加载） -->
-                                <video muted autoplay loop playsinline preload="none" poster="Life1.jpg" loading="lazy">
+                                <video muted autoplay loop playsinline decoding="async" preload="metadata" poster="Life1.jpg" loading="lazy">
                                     <source data-src="Life11.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
@@ -1079,7 +1084,7 @@
                                 <!-- 【此处替换为你的横屏长视频2】 -->
                                 <!-- 封面图路径：poster 属性 -->
                                 <!-- 视频路径：source 的 data-src 值 （懒加载） -->
-                                <video muted autoplay loop playsinline preload="none" poster="Life2.jpg" loading="lazy">
+                                <video muted autoplay loop playsinline decoding="async" preload="metadata" poster="Life2.jpg" loading="lazy">
                                     <source data-src="Life22.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
@@ -1419,56 +1424,78 @@
         // ============================================
         // Intersection Observer - 视频进入视口自动播放
         // ============================================
-        const videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const container = entry.target;
-                const video = container.querySelector('video');
-                const source = video ? video.querySelector('source') : null;
-                if (!video || !source) return;
-
-                if (entry.isIntersecting) {
-                    // 入场三步走：
-                    // 1. 将 data-src 赋给真实的 src（如果还未赋值）
-                    if (source.dataset.src && !source.src) {
-                        source.src = source.dataset.src;
-                        video.load(); // 触发加载
-                    }
-                    
-                    // 2. 监听元数据加载完成，触发淡入效果
-                    const markLoaded = () => {
-                        video.classList.add('loaded');
-                        container.style.background = '';  // 清除灰色占位背景
-                    };
-                    if (video.readyState >= 2) {
-                        // 已经准备好
-                        markLoaded();
-                    } else {
-                        // 等待就绪
-                        video.addEventListener('loadeddata', markLoaded, { once: true });
-                    }
-                    
-                    // 3. 播放视频
-                    video.play().catch(() => {});
-                } else {
-                    // 离开视口：暂停、静音、重置声音按钮
-                    video.pause();
-                    video.muted = true;
-                    const btn = container.querySelector('.sound-control');
-                    if (btn) {
-                        btn.classList.remove('active');
-                        btn.querySelector('.sound-off').classList.remove('hidden');
-                        btn.querySelector('.sound-on').classList.add('hidden');
-                    }
-                    if (currentlyPlayingAudio === video) {
-                        currentlyPlayingAudio = null;
-                    }
+        // Intersection Observer - 视频懒加载优化版本
+        // ============================================
+        // 降级方案：如果浏览器不支持 IntersectionObserver，直接加载所有视频
+        if (!window.IntersectionObserver) {
+            document.querySelectorAll('.video-container source').forEach(source => {
+                if (source.dataset.src && !source.src) {
+                    source.src = source.dataset.src;
                 }
             });
-        }, { threshold: 0.3 });
-        
-        document.querySelectorAll('.video-container').forEach(container => {
-            videoObserver.observe(container);
-        });
+        } else {
+            // 使用 IntersectionObserver 进行智能懒加载
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const container = entry.target;
+                    const video = container.querySelector('video');
+                    const source = video ? video.querySelector('source') : null;
+                    if (!video || !source) return;
+
+                    if (entry.isIntersecting) {
+                        // 1. 将 data-src 赋给真实的 src（如果还未赋值）
+                        if (source.dataset.src && !source.src) {
+                            source.src = source.dataset.src;
+                            video.load(); // 触发加载
+                        }
+                        
+                        // 2. 监听 canplaythrough 事件（视频可以流畅播放）
+                        const playWhenReady = () => {
+                            video.classList.add('loaded');
+                            container.style.background = '';
+                            video.play().catch(() => {});
+                        };
+                        
+                        // 检查是否已经可以播放
+                        if (video.readyState >= 3) { // HAVE_FUTURE_DATA 或更高
+                            playWhenReady();
+                        } else {
+                            // 监听 canplaythrough 确保视频可以流畅执行到末尾且无需停缓冲
+                            video.addEventListener('canplaythrough', playWhenReady, { once: true });
+                            // 备用：如果 canplaythrough 长时间不触发，5秒后用 loadeddata 兜底
+                            const fallbackTimeout = setTimeout(() => {
+                                if (video.readyState >= 2) {
+                                    video.removeEventListener('canplaythrough', playWhenReady);
+                                    playWhenReady();
+                                }
+                            }, 5000);
+                            // 清理超时计时器
+                            video.addEventListener('canplaythrough', () => clearTimeout(fallbackTimeout), { once: true });
+                        }
+                    } else {
+                        // 离开视口：暂停、静音、重置声音按钮
+                        video.pause();
+                        video.muted = true;
+                        const btn = container.querySelector('.sound-control');
+                        if (btn) {
+                            btn.classList.remove('active');
+                            btn.querySelector('.sound-off').classList.remove('hidden');
+                            btn.querySelector('.sound-on').classList.add('hidden');
+                        }
+                        if (currentlyPlayingAudio === video) {
+                            currentlyPlayingAudio = null;
+                        }
+                    }
+                });
+            }, { 
+                threshold: 0.3,
+                rootMargin: '200px'  // 在距离视口200px时开始加载
+            });
+            
+            document.querySelectorAll('.video-container').forEach(container => {
+                videoObserver.observe(container);
+            });
+        }
         
         // ============================================
         // GSAP Animations
