@@ -248,13 +248,13 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0;                       /* 先透明，等加载完再淡入 */
+            opacity: 1;                       /* 初始可见显示 poster 占位图 */
             transition: opacity .8s ease;
             background: #f2f2f2;             /* 防止黑块出现 */
         }
         
         .video-container video.loaded {
-            opacity: 1;
+            opacity: 1;                       /* 加载完成后保持可见 */
         }
         
         .sound-control {
@@ -772,15 +772,15 @@
                         </div>
                         <!-- 【此处替换为你的个人照片2】 -->
                         <div class="aspect-[3/4] rounded-2xl overflow-hidden card-hover">
-                            <img src="ME20.jpg" alt="Portrait 2" class="w-full h-full object-cover">
+                            <img src="me2.JPG" alt="Portrait 2" class="w-full h-full object-cover">
                         </div>
                         <!-- 【此处替换为你的个人照片3】 -->
                         <div class="aspect-[3/4] rounded-2xl overflow-hidden card-hover">
-                            <img src="ME30.jpg" alt="Portrait 3" class="w-full h-full object-cover">
+                            <img src="me3.JPG" alt="Portrait 3" class="w-full h-full object-cover">
                         </div>
                         <!-- 【此处替换为你的个人照片4】 -->
                         <div class="aspect-[3/4] rounded-2xl overflow-hidden card-hover">
-                            <img src="ME40.jpg" alt="Portrait 4" class="w-full h-full object-cover">
+                            <img src="me4.JPG" alt="Portrait 4" class="w-full h-full object-cover">
                         </div>
                     </div>
                     
@@ -931,12 +931,12 @@
                         <div class="iphone-button"></div>
                         <div class="iphone-notch"></div>
                         <div class="iphone-screen">
-                            <div class="video-container work-video" data-video-id="1" style="background:#f2f2f2 url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&h=550&fit=crop&q=80') center/cover no-repeat; background-size:cover;">
+                            <div class="video-container work-video" data-video-id="1" style="background:#f2f2f2;">
                                 <!-- 【此处替换为你的竖屏视频1】 -->
                                 <!-- 封面图路径：poster 属性 & 上层容器的 style background url -->
-                                <!-- 视频路径：source 的 data-src 值 -->
+                                <!-- 视频路径：source 的 src 值 -->
                                 <video muted loop playsinline preload="metadata" poster="Work1.jpg" loading="lazy">
-                                    <source data-src="Work1.mp4" type="video/mp4">
+                                    <source src="Work11.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
                                     <div class="video-progress-fill"></div>
@@ -958,12 +958,12 @@
                         <div class="iphone-button"></div>
                         <div class="iphone-notch"></div>
                         <div class="iphone-screen">
-                            <div class="video-container work-video" data-video-id="2" style="background:#f2f2f2 url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=550&fit=crop&q=80') center/cover no-repeat; background-size:cover;">
+                            <div class="video-container work-video" data-video-id="2" style="background:#f2f2f2;">
                                 <!-- 【此处替换为你的竖屏视频2】 -->
                                 <!-- 封面图路径：poster 属性 & 上层容器的 style background url -->
-                                <!-- 视频路径：source 的 data-src 值 -->
+                                <!-- 视频路径：source 的 src 值 -->
                                 <video muted loop playsinline preload="metadata" poster="Work2.jpg" loading="lazy">
-                                    <source data-src="Work2.mp4" type="video/mp4">
+                                    <source src="Work22.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
                                     <div class="video-progress-fill"></div>
@@ -985,12 +985,12 @@
                         <div class="iphone-button"></div>
                         <div class="iphone-notch"></div>
                         <div class="iphone-screen">
-                            <div class="video-container work-video" data-video-id="3" style="background:#f2f2f2 url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=300&h=550&fit=crop&q=80') center/cover no-repeat; background-size:cover;">
+                            <div class="video-container work-video" data-video-id="3" style="background:#f2f2f2;">
                                 <!-- 【此处替换为你的竖屏视频3】 -->
                                 <!-- 封面图路径：poster 属性 & 上层容器的 style background url -->
-                                <!-- 视频路径：source 的 data-src 值 -->
+                                <!-- 视频路径：source 的 src 值 -->
                                 <video muted loop playsinline preload="metadata" poster="Work3.jpg" loading="lazy">
-                                    <source data-src="Work3.mp4" type="video/mp4">
+                                    <source src="Work33.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
                                     <div class="video-progress-fill"></div>
@@ -1012,12 +1012,12 @@
                         <div class="iphone-button"></div>
                         <div class="iphone-notch"></div>
                         <div class="iphone-screen">
-                            <div class="video-container work-video" data-video-id="4" style="background:#f2f2f2 url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=550&fit=crop&q=80') center/cover no-repeat; background-size:cover;">
+                            <div class="video-container work-video" data-video-id="4" style="background:#f2f2f2;">
                                 <!-- 【此处替换为你的竖屏视频4】 -->
                                 <!-- 封面图路径：poster 属性 & 上层容器的 style background url -->
-                                <!-- 视频路径：source 的 data-src 值 -->
+                                <!-- 视频路径：source 的 src 值 -->
                                 <video muted loop playsinline preload="metadata" poster="work4.jpg" loading="lazy">
-                                    <source data-src="work4.mp4" type="video/mp4">
+                                    <source src="Work44.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
                                     <div class="video-progress-fill"></div>
@@ -1052,12 +1052,12 @@
                 <div class="gsap-fade-up" data-delay="0.1">
                     <div class="iphone-frame-landscape">
                         <div class="iphone-screen-landscape">
-                            <div class="video-container" data-video-id="5" style="background:#f2f2f2 url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=450&fit=crop&q=80') center/cover no-repeat; background-size:cover;">
+                            <div class="video-container" data-video-id="5" style="background:#f2f2f2;">
                                 <!-- 【此处替换为你的横屏长视频1】 -->
                                 <!-- 封面图路径：poster 属性 & 上层容器的 style background url -->
-                                <!-- 视频路径：source 的 data-src 值 -->
+                                <!-- 视频路径：source 的 src 值 -->
                                 <video muted loop playsinline preload="metadata" poster="Life1.jpg" loading="lazy">
-                                    <source data-src="Life1.mp4" type="video/mp4">
+                                    <source src="Life11.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
                                     <div class="video-progress-fill"></div>
@@ -1075,12 +1075,12 @@
                 <div class="gsap-fade-up" data-delay="0.2">
                     <div class="iphone-frame-landscape">
                         <div class="iphone-screen-landscape">
-                            <div class="video-container" data-video-id="6" style="background:#f2f2f2 url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=450&fit=crop&q=80') center/cover no-repeat; background-size:cover;">
+                            <div class="video-container" data-video-id="6" style="background:#f2f2f2;">
                                 <!-- 【此处替换为你的横屏长视频2】 -->
                                 <!-- 封面图路径：poster 属性 & 上层容器的 style background url -->
-                                <!-- 视频路径：source 的 data-src 值 -->
+                                <!-- 视频路径：source 的 src 值 -->
                                 <video muted loop playsinline preload="metadata" poster="Life2.jpg" loading="lazy">
-                                    <source data-src="Life2.mp4" type="video/mp4">
+                                    <source src="Life22.mp4" type="video/mp4">
                                 </video>
                                 <div class="video-progress-bar">
                                     <div class="video-progress-fill"></div>
@@ -1425,19 +1425,19 @@
                 const video = container.querySelector('video');
                 if (!video) return;
 
-                if (entry.isIntersecting) {
-                    // 懒加载真实源
-                    const source = video.querySelector('source');
-                    if (source && source.dataset.src && !source.src) {
-                        source.src = source.dataset.src;
-                        video.load(); // 触发元数据加载
-                        video.addEventListener('loadeddata', () => {
-                            video.classList.add('loaded'); // 触发淡入
-                            // 去掉占位背景
-                            container.style.background = '';
-                        }, { once: true });
-                    }
+                // 当视频元数据或者第一帧已经就绪时，立即淡入并去掉背景
+                const markLoaded = () => {
+                    video.classList.add('loaded');
+                    container.style.background = '';
+                };
+                if (video.readyState >= 2) {
+                    markLoaded();
+                } else {
+                    video.addEventListener('loadeddata', markLoaded, { once: true });
+                }
 
+                if (entry.isIntersecting) {
+                    // 正常播放 / 继续播放
                     video.play().catch(() => {});
                 } else {
                     video.pause();
