@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jade Zhao — Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Oswald + Noto Sans SC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'portfolio-pink': '#F2C4D0',
+                        'portfolio-lime': '#C8D65C',
+                        'portfolio-brown': '#5D3A2A',
+                        'portfolio-cream': '#F7F3E9',
+                        'portfolio-dark': '#3D2914',
+                    },
+                    fontFamily: {
+                        'display': ['"Oswald"', 'sans-serif'],
+                        'body': ['"Noto Sans SC"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* 呼吸渐变背景动画 */
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .breathing-gradient {
+            background-size: 200% 200%;
+            animation: gradientFlow 20s ease infinite;
+        }
+        
+        /* 毛玻璃效果 */
+        .glass {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .glass-dark {
+            background: rgba(61, 41, 20, 0.78);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* 导航链接下划线动画 */
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* 按钮微动效 */
+        .btn-hover {
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 卡片悬停效果 */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* ============================================
+           iPhone Frame - 竖屏
+           ============================================ */
+        .iphone-frame {
+            position: relative;
+            background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+            border-radius: 52px;
+            padding: 12px;
+            box-shadow: 
+                0 32px 64px -12px rgba(0, 0, 0, 0.35),
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .iphone-frame::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 32px;
+            background: #0d0d0d;
+            border-radius: 0 0 24px 24px;
+            z-index: 10;
+        }
+        
+        .iphone-screen {
+            background: #000;
+            border-radius: 42px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 9/19.5;
+        }
+        
+        .iphone-screen::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 42px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+        }
+        
+        .iphone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 32px;
+            background: #0d0d0d;
+            border-radius: 0 0 24px 24px;
+            z-index: 20;
+        }
+        
+        .iphone-button {
+            position: absolute;
+            right: -3px;
+            top: 120px;
+            width: 4px;
+            height: 32px;
+            background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+            border-radius: 0 2px 2px 0;
+        }
+        
+        .iphone-button:nth-child(2) {
+            top: 170px;
+            height: 64px;
+        }
+        
+        .iphone-button:nth-child(3) {
+            left: -3px;
+            right: auto;
+            top: 120px;
+            height: 48px;
+            border-radius: 2px 0 0 2px;
+        }
+
+        /* ============================================
+           iPhone Frame - 横屏（Life Moments）
+           ============================================ */
+        .iphone-frame-landscape {
+            position: relative;
+            background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+            border-radius: 40px;
+            padding: 10px;
+            box-shadow: 
+                0 32px 64px -12px rgba(0, 0, 0, 0.35),
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .iphone-frame-landscape::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 100px;
+            background: #0d0d0d;
+            border-radius: 0 18px 18px 0;
+            z-index: 10;
+        }
+        
+        .iphone-screen-landscape {
+            background: #000;
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+        
+        .iphone-screen-landscape::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 32px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+        }
+        
+        /* ============================================
+           视频控制按钮
+           ============================================ */
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .sound-control {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 30;
+        }
+        
+        .video-container:hover .sound-control {
+            opacity: 1;
+        }
+        
+        .sound-control.active {
+            opacity: 1;
+            background: rgba(200, 214, 92, 0.8);
+        }
+        
+        .sound-control svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        /* 视频进度条 - 升级版 */
+        .video-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.4) 100%);
+            z-index: 50;
+            cursor: pointer;
+            overflow: visible;
+        }
+
+        .video-progress-fill {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            width: 0%;
+            transition: width 0.08s linear;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8), inset 0 0 4px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 拖动手柄 */
+        .video-progress-handle {
+            position: absolute;
+            bottom: 50%;
+            transform: translate(-50%, 50%);
+            width: 32px;
+            height: 32px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .video-progress-bar:hover .video-progress-handle {
+            opacity: 1;
+        }
+
+        /* Work 视频专用 - 进度条更高 */
+        .work-video .video-progress-bar {
+            height: 14px;
+        }
+
+        .work-video .video-progress-handle {
+            width: 36px;
+            height: 36px;
+            font-size: 22px;
+        }
+        
+        /* SOP 图片交互动画 */
+        .sop-image-container {
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .sop-image-container:hover {
+            transform: scale(1.04) translateY(-8px);
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.15), 
+                        0 0 40px rgba(242, 196, 208, 0.4);
+        }
+
+        .sop-image-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .sop-image-container:hover::before {
+            opacity: 1;
+        }
+
+        /* 视频图片交互动画 */
+        .video-image-frame {
+            transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: brightness(1);
+        }
+
+        .video-image-frame:hover {
+            filter: brightness(1.08);
+            transform: scale(1.03);
+        }
+        
+        /* 播放按钮 */
+        .play-btn {
+            width: 56px;
+            height: 56px;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(16px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+        }
+        
+        .play-btn:hover {
+            background: rgba(0, 0, 0, 0.65);
+            transform: scale(1.12);
+        }
+        
+        .play-btn::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 18px solid white;
+            border-top: 11px solid transparent;
+            border-bottom: 11px solid transparent;
+            margin-left: 4px;
+        }
+        
+        /* 封面图容器 */
+        .cover-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #e8e4da 0%, #f0ece2 100%);
+        }
+        
+        .cover-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .cover-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* 隐藏滚动条但保持功能 */
+        html::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        html::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        html::-webkit-scrollbar-thumb {
+            background: rgba(93, 58, 42, 0.15);
+            border-radius: 3px;
+        }
+        
+        html::-webkit-scrollbar-thumb:hover {
+            background: rgba(93, 58, 42, 0.3);
+        }
+        
+        /* 移动端菜单 */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* 汉堡菜单动画 */
+        .hamburger span {
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        /* ============================================
+           About Me - 新样式
+           ============================================ */
+        
+        /* 奢侈品质感大标题 - 全大写、细字重、大字间距 */
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 300;
+            font-size: 0.75rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: #5D3A2A;
+            opacity: 0.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* 经历条目 - 无边框，细底边线 */
+        .exp-item {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(93, 58, 42, 0.1);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .exp-item:first-child {
+            padding-top: 0;
+        }
+        
+        .exp-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 0 -1rem;
+            border-bottom-color: transparent;
+        }
+        
+        /* 经历标题 */
+        .exp-title {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #3D2914;
+            line-height: 1.6;
+        }
+        
+        /* 日期 - 淡灰色、纤细 */
+        .exp-date {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 300;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: #5D3A2A;
+            opacity: 0.5;
+            margin-top: 0.25rem;
+        }
+        
+        /* 描述文字 - 增加行高 */
+        .exp-desc {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 400;
+            font-size: 0.875rem;
+            color: #5D3A2A;
+            opacity: 0.7;
+            line-height: 1.9;
+            margin-top: 0.75rem;
+        }
+        
+        /* 标签 - 极淡背景，无边框 */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            background: rgba(93, 58, 42, 0.06);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 400;
+            color: #5D3A2A;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        
+        .tag:hover {
+            background: rgba(93, 58, 42, 0.12);
+            opacity: 1;
+        }
+        
+        /* ============================================
+           微信二维码模态框
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+        }
+        
+        /* 大标题样式 */
+        .heading-display {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            line-height: 0.95;
+        }
+        
+        /* 中文标题 */
+        .heading-cn {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 700;
+        }
+        
+        /* 微信按钮 */
+        .wechat-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: rgba(93, 58, 42, 0.08);
+            border-radius: 100px;
+            color: #5D3A2A;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.35s ease;
+            cursor: pointer;
+        }
+        
+        .wechat-btn:hover {
+            background: rgba(93, 58, 42, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .wechat-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #5D3A2A;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="font-body text-portfolio-dark antialiased">
+
+    <!-- ============================================
+         微信二维码模态框
+         【此处替换为你的微信二维码图片】
+         ============================================ -->
+    <div id="wechatModal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-close" onclick="closeModalBtn(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </div>
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <p class="heading-cn text-lg mb-4 text-portfolio-dark">扫码添加微信</p>
+            <!-- 【此处替换为你的微信二维码图片】 -->
+            <img src="wechat.JPG" alt="WeChat QR Code" class="w-48 h-48 rounded-xl">
+            <p class="text-sm text-portfolio-brown opacity-60 mt-4">微信号: 17744827789</p>
+        </div>
+    </div>
+
+    <!-- ============================================
+         Sticky Navigation - 悬浮岛效果（下移2rem）
+         ============================================ -->
+    <nav class="fixed left-0 right-0 z-50 px-5 sm:px-8 lg:px-12 flex justify-center" style="top: 2rem;">
+        <div class="hidden md:flex items-center gap-1 glass rounded-full px-2 py-2 shadow-xl">
+            <a href="#home" class="nav-link px-5 py-2 text-sm font-medium text-portfolio-dark rounded-full hover:bg-white/60 transition-all duration-300">Home</a>
+            <a href="#about" class="nav-link px-5 py-2 text-sm font-medium text-portfolio-dark rounded-full hover:bg-white/60 transition-all duration-300">About</a>
+            <a href="#work" class="nav-link px-5 py-2 text-sm font-medium text-portfolio-dark rounded-full hover:bg-white/60 transition-all duration-300">Work</a>
+            <a href="#contact" class="nav-link px-5 py-2 text-sm font-medium text-portfolio-dark rounded-full hover:bg-white/60 transition-all duration-300">Contact</a>
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden hamburger flex flex-col gap-1.5 p-3 glass rounded-xl shadow-lg ml-auto" onclick="toggleMenu()" aria-label="Toggle menu">
+            <span class="w-5 h-0.5 bg-portfolio-dark block rounded-full"></span>
+            <span class="w-5 h-0.5 bg-portfolio-dark block rounded-full"></span>
+            <span class="w-5 h-0.5 bg-portfolio-dark block rounded-full"></span>
+        </button>
+    </nav>
+    
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="mobile-menu fixed inset-0 z-40 bg-portfolio-cream/98 backdrop-blur-2xl flex flex-col items-center justify-center gap-10 md:hidden">
+        <a href="#home" onclick="toggleMenu()" class="heading-display text-4xl text-portfolio-dark">Home</a>
+        <a href="#about" onclick="toggleMenu()" class="heading-display text-4xl text-portfolio-dark">About</a>
+        <a href="#work" onclick="toggleMenu()" class="heading-display text-4xl text-portfolio-dark">Work</a>
+        <a href="#video" onclick="toggleMenu()" class="heading-display text-4xl text-portfolio-dark">Video</a>
+        <a href="#life" onclick="toggleMenu()" class="heading-display text-4xl text-portfolio-dark">Life</a>
+        <a href="#contact" onclick="toggleMenu()" class="heading-display text-4xl text-portfolio-dark">Contact</a>
+    </div>
+
+    <!-- ============================================
+         Section 1: Hero
+         ============================================ -->
+    <section id="home" class="min-h-screen bg-portfolio-pink breathing-gradient relative flex flex-col justify-center px-6 md:px-16 lg:px-24 py-12" style="background: linear-gradient(135deg, #F2C4D0 0%, #F5D5DE 50%, #F2C4D0 100%);">
+        <div class="max-w-7xl mx-auto w-full">
+            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 pt-24 md:pt-0">
+                <!-- Left: Main Title -->
+                <div class="gsap-fade-up">
+                    <h1 class="heading-display text-portfolio-dark" style="font-size: clamp(3.5rem, 10vw, 8rem);">
+                        HI, I'M<br>
+                        JADE ZHAO.
+                    </h1>
+                </div>
+                
+                <!-- Right: Name & Link -->
+                <div class="gsap-fade-up lg:text-right lg:pt-6" data-delay="0.15">
+                    <p class="heading-cn text-portfolio-dark text-xl md:text-2xl mb-1">赵诗琪</p>
+                    <p class="font-body text-portfolio-dark text-base md:text-lg mb-8 opacity-60">Zhao Shiqi</p>
+                    <a href="#about" class="inline-flex items-center gap-3 text-sm font-medium text-portfolio-dark group btn-hover bg-white/50 px-6 py-3 rounded-full border border-white/60">
+                        <span class="nav-link">Explore My Work</span>
+                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom: PORTFOLIO text -->
+        <div class="absolute bottom-8 md:bottom-12 left-0 right-0 text-center gsap-fade-up" data-delay="0.3">
+            <span class="heading-display text-portfolio-cream" style="font-size: clamp(4rem, 15vw, 12rem); opacity: 0.75;">
+                PORTFOLIO
+            </span>
+        </div>
+    </section>
+
+    <!-- ============================================
+         Section 2: About Me - 奢侈品质感升级
+         ============================================ -->
+    <section id="about" class="min-h-screen bg-portfolio-cream relative py-24 md:py-36">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <!-- Title -->
+            <h2 class="heading-display text-portfolio-brown text-center mb-20 md:mb-28 gsap-fade-up" style="font-size: clamp(3rem, 8vw, 6rem);">
+                ABOUT ME
+            </h2>
+            
+            <div class="flex flex-col lg:flex-row gap-14 lg:gap-24">
+                <!-- Left: Photo Grid - 先淡入 -->
+                <div class="lg:w-2/5 gsap-photo-grid">
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- 【此处替换为你的个人照片1】 -->
+                        <div class="aspect-[3/4] rounded-2xl overflow-hidden card-hover">
+                            <img src="me1.JPG" alt="Portrait 1" class="w-full h-full object-cover">
+                        </div>
+                        <!-- 【此处替换为你的个人照片2】 -->
+                        <div class="aspect-[3/4] rounded-2xl overflow-hidden card-hover">
+                            <img src="me2.JPG" alt="Portrait 2" class="w-full h-full object-cover">
+                        </div>
+                        <!-- 【此处替换为你的个人照片3】 -->
+                        <div class="aspect-[3/4] rounded-2xl overflow-hidden card-hover">
+                            <img src="me3.JPG" alt="Portrait 3" class="w-full h-full object-cover">
+                        </div>
+                        <!-- 【此处替换为你的个人照片4】 -->
+                        <div class="aspect-[3/4] rounded-2xl overflow-hidden card-hover">
+                            <img src="me4.JPG" alt="Portrait 4" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    
+                    <!-- Tags - 极淡背景，无边框 -->
+                    <div class="mt-10 flex flex-wrap gap-3">
+                        <span class="tag">#ENTP/ENTJ</span>
+                        <span class="tag">#执行力强</span>
+                        <span class="tag">#善于0-1创造</span>
+                        <span class="tag">#自学能力强</span>
+                        <span class="tag">#行走灵感池</span>
+                        <span class="tag">#哲学生加成的逻辑性和思辨能力</span>
+                        <span class="tag">#审美在线</span>
+                        <span class="tag">#善于服务于品牌调性</span>
+                    </div>
+                </div>
+                
+                <!-- Right: Content - Staggered浮现 -->
+                <div class="lg:w-3/5 space-y-12">
+                    <!-- Internship -->
+                    <div class="gsap-exp-item" data-delay="0">
+                        <p class="section-title">I N T E R N S H I P</p>
+                        <div class="space-y-0">
+                            <div class="exp-item">
+                                <p class="exp-title">蓝色光标传播集团（Blue Focus-4A广告公司）内容运营实习生</p>
+                                <p class="exp-date">2025.6 — 2025.9</p>
+                                <p class="exp-desc">负责云南白药小红书蓝V账号的全闭环运营，涵盖图文与短视频内容策划、站内挂链电商转化、账号视觉SOP优化及日常数据复盘优化。</p>
+                            </div>
+                            <div class="exp-item">
+                                <p class="exp-title">东方市广播电视台 采编记者实习生</p>
+                                <p class="exp-date">2024.6 — 2024.9</p>
+                                <p class="exp-desc">熟练掌握新闻前期选题、采访、后期剪辑、文案输出、APP运营以及公众号运营技能。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campus -->
+                    <div class="gsap-exp-item" data-delay="0.15">
+                        <p class="section-title">C A M P U S</p>
+                        <div class="space-y-0">
+                            <div class="exp-item">
+                                <p class="exp-title">大学生艺术团（校级组织）声乐部部长/代理团长</p>
+                                <p class="exp-date">2023.9 — 2024.6</p>
+                                <p class="exp-desc">拥有极强领导能力、组织能力、策划能力以及创造力。</p>
+                            </div>
+                            <div class="exp-item">
+                                <p class="exp-title">湘潭大学公益健康中心（校级组织）自媒体运营部部长</p>
+                                <p class="exp-date">2022.10 — 2023.6</p>
+                                <p class="exp-desc">主导运营组织官方微信公众号、抖音账号；熟练单反使用。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills & Hobby -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 gsap-exp-item" data-delay="0.3">
+                        <div>
+                            <p class="section-title">S K I L L</p>
+                            <ul class="space-y-3 text-sm text-portfolio-brown opacity-70 leading-relaxed">
+                                <li>雅思7.0 — 英语可作为工作语言</li>
+                                <li>剪映、SQL、熟练使用各大AI工具（Gemini/Claude/Chat GPT...）、PS</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="section-title">H O B B Y</p>
+                            <ul class="space-y-3 text-sm text-portfolio-brown opacity-70 leading-relaxed">
+                                <li>唱歌、电吉他、街舞、拉片</li>
+                                <li>欧美流行、说唱、摇滚、R&B</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         Section 3: What I Can Do (Work)
+         ============================================ -->
+    <section id="work" class="min-h-screen bg-portfolio-lime breathing-gradient relative py-24 md:py-36" style="background: linear-gradient(135deg, #C8D65C 0%, #D4E070 50%, #C8D65C 100%);">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex flex-col lg:flex-row gap-14 lg:gap-24">
+                <!-- Left: Title -->
+                <div class="lg:w-2/5 gsap-fade-up">
+                    <h2 class="heading-display text-portfolio-dark" style="font-size: clamp(3rem, 8vw, 6rem);">
+                        WHAT I<br>
+                        CAN DO<br>
+                        FOR YOU
+                    </h2>
+                </div>
+                
+                <!-- Right: Service Cards -->
+                <div class="lg:w-3/5 space-y-5">
+                    <!-- Card 1 -->
+                    <div class="bg-[#F7F3E9]/95 rounded-2xl p-7 md:p-8 flex gap-6 gsap-fade-up card-hover" data-delay="0.1">
+                        <div class="w-20 h-20 md:w-28 md:h-28 flex-shrink-0 bg-portfolio-pink rounded-2xl flex items-center justify-center overflow-hidden">
+                            <div class="w-12 h-12 md:w-16 md:h-16 bg-portfolio-brown rounded-full"></div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="heading-cn text-portfolio-dark text-xl md:text-2xl mb-2">灵感输出、内容产出</h3>
+                            <p class="text-sm text-portfolio-brown opacity-70 leading-relaxed">极具创造力；熟练各个内容形式脚本、拍摄、后期剪辑、封面设计、文案撰写全流程技能。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2 -->
+                    <div class="bg-[#F7F3E9]/95 rounded-2xl p-7 md:p-8 flex gap-6 gsap-fade-up card-hover" data-delay="0.2">
+                        <div class="w-20 h-20 md:w-28 md:h-28 flex-shrink-0 bg-portfolio-brown rounded-2xl flex items-center justify-center overflow-hidden">
+                            <div class="flex gap-1.5">
+                                <div class="w-4 h-12 md:w-5 md:h-16 bg-portfolio-pink rounded-full"></div>
+                                <div class="w-4 h-12 md:w-5 md:h-16 bg-portfolio-pink rounded-full"></div>
+                                <div class="w-4 h-12 md:w-5 md:h-16 bg-portfolio-pink rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="heading-cn text-portfolio-dark text-xl md:text-2xl mb-2">活动策划、资源整合</h3>
+                            <p class="text-sm text-portfolio-brown opacity-70 leading-relaxed">具备极强的外联与商务洽谈能力，曾独立对接多方资源并达成合作；曾作为学生总导演全流程负责创意方案与现场执行，实现高效的多方协同与资源整合；写过10+篇高质量策划案。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3 -->
+                    <div class="bg-[#F7F3E9]/95 rounded-2xl p-7 md:p-8 flex gap-6 gsap-fade-up card-hover" data-delay="0.3">
+                        <div class="w-20 h-20 md:w-28 md:h-28 flex-shrink-0 bg-portfolio-pink rounded-2xl flex items-center justify-center overflow-hidden">
+                            <div class="w-12 h-12 md:w-16 md:h-16 bg-portfolio-brown rounded-xl"></div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="heading-cn text-portfolio-dark text-xl md:text-2xl mb-2">数据复盘、策略优化</h3>
+                            <p class="text-sm text-portfolio-brown opacity-70 italic leading-relaxed">熟练运用 SQL 及 AI 平台进行数据抓取与分析，将感性创意转化为理性增长策略。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         Section 4: Video Work - 竖屏iPhone
+         ============================================ -->
+    <section id="video" class="min-h-screen bg-portfolio-pink breathing-gradient relative py-24 md:py-36" style="background: linear-gradient(135deg, #F2C4D0 0%, #F5D5DE 50%, #F2C4D0 100%);">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <h2 class="heading-display text-portfolio-dark text-center mb-20 md:mb-28 gsap-fade-up" style="font-size: clamp(3rem, 8vw, 6rem);">
+                VIDEO WORK SAMPLE
+            </h2>
+            
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+                <!-- Video 1 -->
+                <div class="gsap-fade-up" data-delay="0.05">
+                    <div class="iphone-frame">
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-notch"></div>
+                        <div class="iphone-screen">
+                            <div class="video-container work-video" data-video-id="1">
+                                <!-- 【此处替换为你的竖屏视频1】 -->
+                                <video muted loop playsinline poster="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&h=550&fit=crop&q=80">
+                                    <source src="Work1.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-progress-bar">
+                                    <div class="video-progress-fill"></div>
+                                </div>
+                                <div class="sound-control" onclick="toggleSound(this)">
+                                    <svg class="sound-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                                    <svg class="sound-on hidden" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Video 2 -->
+                <div class="gsap-fade-up" data-delay="0.15">
+                    <div class="iphone-frame">
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-notch"></div>
+                        <div class="iphone-screen">
+                            <div class="video-container work-video" data-video-id="2">
+                                <!-- 【此处替换为你的竖屏视频2】 -->
+                                <video muted loop playsinline poster="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=550&fit=crop&q=80">
+                                    <source src="Work2.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-progress-bar">
+                                    <div class="video-progress-fill"></div>
+                                </div>
+                                <div class="sound-control" onclick="toggleSound(this)">
+                                    <svg class="sound-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                                    <svg class="sound-on hidden" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Video 3 -->
+                <div class="gsap-fade-up" data-delay="0.25">
+                    <div class="iphone-frame">
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-notch"></div>
+                        <div class="iphone-screen">
+                            <div class="video-container work-video" data-video-id="3">
+                                <!-- 【此处替换为你的竖屏视频3】 -->
+                                <video muted loop playsinline poster="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=300&h=550&fit=crop&q=80">
+                                    <source src="Work3.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-progress-bar">
+                                    <div class="video-progress-fill"></div>
+                                </div>
+                                <div class="sound-control" onclick="toggleSound(this)">
+                                    <svg class="sound-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                                    <svg class="sound-on hidden" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Video 4 -->
+                <div class="gsap-fade-up" data-delay="0.35">
+                    <div class="iphone-frame">
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-notch"></div>
+                        <div class="iphone-screen">
+                            <div class="video-container work-video" data-video-id="4">
+                                <!-- 【此处替换为你的竖屏视频4】 -->
+                                <video muted loop playsinline poster="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=550&fit=crop&q=80">
+                                    <source src="work4.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-progress-bar">
+                                    <div class="video-progress-fill"></div>
+                                </div>
+                                <div class="sound-control" onclick="toggleSound(this)">
+                                    <svg class="sound-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                                    <svg class="sound-on hidden" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-portfolio-dark text-xs mt-16 opacity-40">
+                注：以上资料仅作为实习作品集展示，无商业用途
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         Section 5: Life Moments - 横屏iPhone
+         ============================================ -->
+    <section id="life" class="min-h-screen bg-portfolio-cream relative py-24 md:py-36">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <h2 class="heading-display text-portfolio-brown text-center mb-20 md:mb-28 gsap-fade-up" style="font-size: clamp(3rem, 8vw, 6rem);">
+                LIFE MOMENTS
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12">
+                <!-- Landscape Video 1 -->
+                <div class="gsap-fade-up" data-delay="0.1">
+                    <div class="iphone-frame-landscape">
+                        <div class="iphone-screen-landscape">
+                            <div class="video-container" data-video-id="5">
+                                <!-- 【此处替换为你的横屏长视频1】 -->
+                                <video muted loop playsinline poster="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=450&fit=crop&q=80">
+                                    <source src="Life1.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-progress-bar">
+                                    <div class="video-progress-fill"></div>
+                                </div>
+                                <div class="sound-control" onclick="toggleSound(this)">
+                                    <svg class="sound-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                                    <svg class="sound-on hidden" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Landscape Video 2 -->
+                <div class="gsap-fade-up" data-delay="0.2">
+                    <div class="iphone-frame-landscape">
+                        <div class="iphone-screen-landscape">
+                            <div class="video-container" data-video-id="6">
+                                <!-- 【此处替换为你的横屏长视频2】 -->
+                                <video muted loop playsinline poster="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=450&fit=crop&q=80">
+                                    <source src="Life2.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-progress-bar">
+                                    <div class="video-progress-fill"></div>
+                                </div>
+                                <div class="sound-control" onclick="toggleSound(this)">
+                                    <svg class="sound-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                                    <svg class="sound-on hidden" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-portfolio-dark text-xs mt-16 opacity-40">
+                注：以上资料仅作为实习作品集展示，无商业用途
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         Section 6: Cover Sample - 一行4张
+         ============================================ -->
+    <section class="min-h-screen bg-portfolio-cream relative py-24 md:py-36">
+        <!-- Brown Header with Glass Effect -->
+        <div class="glass-dark py-10 md:py-14 mb-16 md:mb-24">
+            <h2 class="heading-display text-portfolio-cream text-center" style="font-size: clamp(3rem, 8vw, 6rem);">
+                COVER SAMPLE
+            </h2>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <!-- 一行4张封面 -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- Cover 1 -->
+                <div class="cover-item aspect-[3/4] gsap-cover" data-index="0">
+                    <!-- 【此处替换为你的封面图1】 -->
+                    <img src="c1.JPG" alt="Cover 1">
+                </div>
+                
+                <!-- Cover 2 -->
+                <div class="cover-item aspect-[3/4] gsap-cover" data-index="1">
+                    <!-- 【此处替换为你的封面图2】 -->
+                    <img src="c2.JPG" alt="Cover 2">
+                </div>
+                
+                <!-- Cover 3 -->
+                <div class="cover-item aspect-[3/4] gsap-cover" data-index="2">
+                    <!-- 【此处替换为你的封面图3】 -->
+                    <img src="c3.JPG" alt="Cover 3">
+                </div>
+                
+                <!-- Cover 4 -->
+                <div class="cover-item aspect-[3/4] gsap-cover" data-index="3">
+                    <!-- 【此处替换为你的封面图4】 -->
+                    <img src="c4.JPG" alt="Cover 4">
+                </div>
+                
+                <!-- Cover 5 -->
+                <div class="cover-item aspect-[3/4] gsap-cover" data-index="4">
+                    <!-- 【此处替换为你的封面图5】 -->
+                    <img src="c5.JPG" alt="Cover 5">
+                </div>
+                
+                <!-- Cover 6 -->
+                <div class="cover-item aspect-[3/4] gsap-cover" data-index="5">
+                    <!-- 【此处替换为你的封面图6】 -->
+                    <img src="c6.JPG" alt="Cover 6">
+                </div>
+                
+                <!-- Cover 7 -->
+                <div class="cover-item aspect-[3/4] gsap-cover" data-index="6">
+                    <!-- 【此处替换为你的封面图7】 -->
+                    <img src="c7.JPG" alt="Cover 7">
+                </div>
+                
+                <!-- Cover 8 -->
+                <div class="cover-item aspect-[3/4] gsap-cover" data-index="7">
+                    <!-- 【此处替换为你的封面图8】 -->
+                    <img src="c8.JPG" alt="Cover 8">
+                </div>
+            </div>
+            
+            <p class="text-center text-portfolio-dark text-xs mt-16 opacity-40">
+                注：以上资料仅作为实习作品集展示，无商业用途
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         Section 7: SOP Case
+         ============================================ -->
+    <section class="min-h-screen bg-portfolio-pink breathing-gradient relative py-24 md:py-36" style="background: linear-gradient(135deg, #F2C4D0 0%, #F5D5DE 50%, #F2C4D0 100%);">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <h2 class="heading-cn text-portfolio-dark mb-24 gsap-fade-up" style="font-size: clamp(1.8rem, 5vw, 3rem);">
+                SOP案例入选7/10
+            </h2>
+            
+            <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-stretch">
+                <!-- Left: SOP Image -->
+                <div class="lg:w-8/12 gsap-fade-up" data-delay="0.1">
+                    <div class="sop-image-container rounded-3xl shadow-2xl overflow-hidden">
+                        <!-- 【此处替换为你的SOP展示图】 -->
+                        <img src="sop.JPG" alt="SOP案例" class="w-full h-auto object-cover">
+                    </div>
+                </div>
+                
+                <!-- Right: Phone Mockup -->
+                <div class="lg:w-4/12 flex flex-col justify-center items-center gsap-fade-up" data-delay="0.2">
+                    <div class="iphone-frame max-w-[240px]">
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-button"></div>
+                        <div class="iphone-notch"></div>
+                        <div class="iphone-screen">
+                            <!-- 【此处替换为你的App截图】 -->
+                            <img src="zd.PNG" alt="App Screenshot" class="video-image-frame w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <p class="heading-cn text-portfolio-dark text-xl md:text-2xl mt-10 text-center">
+                        入选置顶视频
+                    </p>
+                </div>
+            </div>
+            
+            <p class="text-center text-portfolio-dark text-xs mt-16 opacity-40">
+                注：以上资料仅作为实习作品集展示，无商业用途
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         Section 8: Contact - 增加微信按钮
+         ============================================ -->
+    <section id="contact" class="min-h-[75vh] bg-portfolio-cream relative py-24 md:py-36 flex items-center">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 w-full">
+            <div class="flex flex-col lg:flex-row gap-14 lg:gap-40 items-start">
+                <!-- Left: Title -->
+                <div class="gsap-fade-up">
+                    <h2 class="heading-display text-portfolio-dark" style="font-size: clamp(3rem, 8vw, 6rem);">
+                        LET'S<br>
+                        CONNECT
+                    </h2>
+                </div>
+                
+                <!-- Right: Contact Info -->
+                <div class="gsap-fade-up" data-delay="0.15">
+                    <div class="space-y-6">
+                        <!-- Email -->
+                        <a href="mailto:Jade1sv7789@163.com" class="block heading-cn text-portfolio-dark text-base md:text-lg hover:opacity-60 transition-opacity duration-300">
+                            <span class="opacity-40 text-sm mr-3 font-normal font-display tracking-widest">EMAIL</span>
+                            Jade1sv7789@163.com
+                        </a>
+                        
+                        <!-- Phone -->
+                        <a href="tel:17744827789" class="block heading-cn text-portfolio-dark text-base md:text-lg hover:opacity-60 transition-opacity duration-300">
+                            <span class="opacity-40 text-sm mr-3 font-normal font-display tracking-widest">PHONE</span>
+                            17744827789
+                        </a>
+                        
+                        <!-- WeChat Button -->
+                        <div class="pt-4">
+                            <button class="wechat-btn" onclick="openModal()">
+                                <svg viewBox="0 0 24 24"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.045c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.969-.982z"/></svg>
+                                WeChat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         Footer
+         ============================================ -->
+    <footer class="bg-portfolio-dark py-10">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 text-center">
+            <p class="text-portfolio-cream/30 text-xs">© 2025 Jade Zhao. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ============================================
+         Scripts
+         ============================================ -->
+    <script>
+        // Register GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // ============================================
+        // Mobile Menu Toggle
+        // ============================================
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+        
+        // ============================================
+        // 微信模态框
+        // ============================================
+        function openModal() {
+            document.getElementById('wechatModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(event) {
+            if (event.target === document.getElementById('wechatModal')) {
+                document.getElementById('wechatModal').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        function closeModalBtn(event) {
+            event.stopPropagation();
+            document.getElementById('wechatModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // ============================================
+        // 视频音轨控制 - 独占音轨
+        // ============================================
+        let currentlyPlayingAudio = null;
+        
+        function toggleSound(btn) {
+            const container = btn.closest('.video-container');
+            const video = container.querySelector('video');
+            const soundOff = btn.querySelector('.sound-off');
+            const soundOn = btn.querySelector('.sound-on');
+            
+            // 如果当前视频已经在播放声音，则静音
+            if (currentlyPlayingAudio === video) {
+                video.muted = true;
+                soundOff.classList.remove('hidden');
+                soundOn.classList.add('hidden');
+                btn.classList.remove('active');
+                currentlyPlayingAudio = null;
+                return;
+            }
+            
+            // 静音其他所有视频
+            document.querySelectorAll('.video-container video').forEach(v => {
+                v.muted = true;
+            });
+            document.querySelectorAll('.sound-control').forEach(b => {
+                b.classList.remove('active');
+                b.querySelector('.sound-off').classList.remove('hidden');
+                b.querySelector('.sound-on').classList.add('hidden');
+            });
+            
+            // 开启当前视频声音
+            video.muted = false;
+            soundOff.classList.add('hidden');
+            soundOn.classList.remove('hidden');
+            btn.classList.add('active');
+            currentlyPlayingAudio = video;
+        }
+        
+        // ============================================
+        // ============================================
+        // 视频进度条更新 - 支持拖动 + 爱心手柄
+        // ============================================
+        document.querySelectorAll('.video-container').forEach(container => {
+            const video = container.querySelector('video');
+            const progressBar = container.querySelector('.video-progress-bar');
+            const progressFill = container.querySelector('.video-progress-fill');
+            
+            if (!video || !progressBar) return;
+            
+            // 创建拖动手柄
+            const handle = document.createElement('div');
+            handle.className = 'video-progress-handle';
+            handle.innerHTML = '❤️';
+            progressBar.appendChild(handle);
+            
+            let isDragging = false;
+            
+            // 更新进度条和手柄位置
+            const updateProgressDisplay = (percent) => {
+                progressFill.style.width = (percent * 100) + '%';
+                handle.style.left = (percent * 100) + '%';
+            };
+            
+            // 更新进度函数
+            const updateProgress = (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                updateProgressDisplay(percent);
+                video.currentTime = percent * video.duration;
+            };
+            
+            // 视频播放时更新进度
+            video.addEventListener('timeupdate', () => {
+                if (video.duration && !isDragging) {
+                    const percent = video.currentTime / video.duration;
+                    updateProgressDisplay(percent);
+                }
+            });
+            
+            // 点击或开始拖动
+            progressBar.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                updateProgress(e);
+            });
+            
+            // 拖动过程中更新
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    updateProgress(e);
+                }
+            });
+            
+            // 松开鼠标结束拖动
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+            
+            // 点击进度条跳转（保留点击功能）
+            progressBar.addEventListener('click', (e) => {
+                if (!isDragging) {
+                    updateProgress(e);
+                }
+            });
+            
+            // 鼠标悬停时显示手柄（通过CSS）
+            // 重置进度条
+            video.addEventListener('ended', () => {
+                updateProgressDisplay(0);
+            });
+            
+            // 初始化手柄位置
+            updateProgressDisplay(0);
+        });
+        
+        // ============================================
+        // Intersection Observer - 视频进入视口自动播放
+        // ============================================
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target.querySelector('video');
+                if (entry.isIntersecting) {
+                    video.play();
+                } else {
+                    video.pause();
+                    // 离开视口时静音
+                    video.muted = true;
+                    const btn = entry.target.querySelector('.sound-control');
+                    if (btn) {
+                        btn.classList.remove('active');
+                        btn.querySelector('.sound-off').classList.remove('hidden');
+                        btn.querySelector('.sound-on').classList.add('hidden');
+                    }
+                    if (currentlyPlayingAudio === video) {
+                        currentlyPlayingAudio = null;
+                    }
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        document.querySelectorAll('.video-container').forEach(container => {
+            videoObserver.observe(container);
+        });
+        
+        // ============================================
+        // GSAP Animations
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. 通用淡入动画
+            const fadeElements = document.querySelectorAll('.gsap-fade-up');
+            fadeElements.forEach((el) => {
+                const delay = el.dataset.delay || 0;
+                gsap.fromTo(el, 
+                    { opacity: 0, y: 50 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.9,
+                        delay: parseFloat(delay),
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: el,
+                            start: 'top 88%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            });
+            
+            // 2. About Me - 左侧图片先淡入
+            gsap.fromTo('.gsap-photo-grid', 
+                { opacity: 0, x: -30 },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: '#about',
+                        start: 'top 70%',
+                        toggleActions: 'play none none none'
+                    }
+                }
+            );
+            
+            // 3. About Me - 右侧经历条目staggered浮现
+            const expItems = document.querySelectorAll('.gsap-exp-item');
+            expItems.forEach((item, index) => {
+                const baseDelay = parseFloat(item.dataset.delay) || 0;
+                gsap.fromTo(item, 
+                    { opacity: 0, y: 40 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: baseDelay + 0.3,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: '#about',
+                            start: 'top 60%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            });
+            
+            // 4. Cover Sample - 交错淡入
+            const coverItems = document.querySelectorAll('.gsap-cover');
+            coverItems.forEach((item, index) => {
+                gsap.fromTo(item,
+                    { opacity: 0, y: 40, scale: 0.95 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 0.7,
+                        delay: index * 0.08,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: item,
+                            start: 'top 90%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            });
+            
+            // 5. Hero PORTFOLIO文字视差
+            gsap.to('#home .absolute span', {
+                yPercent: -15,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#home',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+        });
+        
+        // ============================================
+        // Smooth scroll for anchor links
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // ============================================
+        // 导航栏滚动效果
+        // ============================================
+        let lastScroll = 0;
+        const navbar = document.querySelector('nav');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                navbar.querySelector('.glass').classList.add('bg-white/85');
+            } else {
+                navbar.querySelector('.glass').classList.remove('bg-white/85');
+            }
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
